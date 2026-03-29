@@ -1,6 +1,6 @@
 pub use entities::Level;
 use thiserror::Error;
-pub use token::Token;
+pub use token::{Token, refresh as refresh_token, revoke_refresh_token};
 
 pub mod access;
 pub mod auth;

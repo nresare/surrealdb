@@ -7028,6 +7028,7 @@ dependencies = [
  "subtle",
  "surrealdb-protocol",
  "surrealdb-rocksdb",
+ "surrealdb-sdk-core",
  "surrealdb-tikv-client",
  "surrealdb-types",
  "surrealism-runtime",

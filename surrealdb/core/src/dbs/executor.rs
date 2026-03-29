@@ -16,7 +16,7 @@ use web_time::Instant;
 use crate::catalog::providers::{CatalogProvider, NamespaceProvider, RootProvider};
 use crate::ctx::reason::Reason;
 use crate::ctx::{Context, FrozenContext};
-use crate::dbs::response::QueryResult;
+use crate::dbs::response::{QueryResult, query_type_for_toplevel_expr};
 use crate::dbs::{Force, Options, QueryType};
 use crate::doc::DefaultBroker;
 use crate::err::Error;
@@ -1202,7 +1202,7 @@ impl Executor {
 					}
 				}
 				stmt => {
-					let query_type: QueryType = QueryType::for_toplevel_expr(&stmt);
+					let query_type: QueryType = query_type_for_toplevel_expr(&stmt);
 
 					let now = Instant::now();
 					let result = this.execute_bare_statement(kvs, &now, stmt).await;
