@@ -16,8 +16,8 @@ use std::time::Duration;
 
 use async_channel::Sender;
 use futures::{Sink, SinkExt};
-use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder};
-use surrealdb_sdk_core::iam::token::Token;
+use surrealdb_sdk_core::auth::token::Token;
+use surrealdb_sdk_core::query_results::{QueryResult, QueryResultBuilder};
 use surrealdb_sdk_core::rpc::{DbResponse, DbResult};
 use surrealdb_types::{AuthError, Error as TypesError, NotAllowedError};
 use tokio::sync::RwLock;

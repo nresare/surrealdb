@@ -8,9 +8,10 @@ pub mod format {
 	}
 }
 
-mod response;
+#[path = "rpc_response.rs"]
+mod rpc_response;
 
-pub use response::{DbResponse, DbResult, DbResultStats};
+pub use rpc_response::{DbResponse, DbResult, DbResultStats};
 
 pub const SESSION_ID: &str = "session";
 

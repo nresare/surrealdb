@@ -176,10 +176,10 @@ use surrealdb_core::{
 	iam::{Action, ResourceKind, check::check_ns_db},
 	ml::storage::surml_file::SurMlFile,
 };
-use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder};
-use surrealdb_sdk_core::iam::Token as SdkToken;
+use surrealdb_sdk_core::auth::Token as SdkToken;
+use surrealdb_sdk_core::query_results::{QueryResult, QueryResultBuilder};
 #[cfg(not(target_family = "wasm"))]
-use surrealdb_sdk_core::kvs::export::Config as DbExportConfig;
+use surrealdb_sdk_core::export_config::Config as DbExportConfig;
 use surrealdb_types::Error as TypesError;
 use tokio::sync::RwLock;
 #[cfg(not(target_family = "wasm"))]

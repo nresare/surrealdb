@@ -64,8 +64,8 @@ use futures::TryStreamExt;
 use reqwest::RequestBuilder;
 use reqwest::header::{ACCEPT, CONTENT_TYPE, HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
-use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder};
-use surrealdb_sdk_core::iam::Token as CoreToken;
+use surrealdb_sdk_core::auth::Token as CoreToken;
+use surrealdb_sdk_core::query_results::{QueryResult, QueryResultBuilder};
 use surrealdb_sdk_core::rpc::{self, DbResponse, DbResult};
 use surrealdb_types::{AuthError, NotAllowedError};
 #[cfg(not(target_family = "wasm"))]

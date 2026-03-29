@@ -12,7 +12,7 @@ use crate::val::{Object, Value, convert_object_to_public_map};
 use crate::sql::expression::convert_public_value_to_internal;
 use crate::iam;
 
-pub use surrealdb_sdk_core::iam::token::Token;
+pub use surrealdb_sdk_core::auth::token::Token;
 
 pub static HEADER: LazyLock<Header> = LazyLock::new(|| Header::new(Algorithm::HS512));
 

@@ -2,7 +2,7 @@ use std::fmt;
 
 use anyhow::Result;
 use async_channel::Sender;
-use surrealdb_sdk_core::kvs::export::TableConfig;
+use surrealdb_sdk_core::export_config::TableConfig;
 use surrealdb_types::ToSql;
 
 use super::Transaction;
@@ -20,7 +20,7 @@ use crate::key::record;
 use crate::kvs::KVValue;
 use crate::sql::statements::OptionStatement;
 
-pub use surrealdb_sdk_core::kvs::export::Config;
+pub use surrealdb_sdk_core::export_config::Config;
 
 fn table_config_is_any(config: &TableConfig) -> bool {
 	matches!(config, TableConfig::All | TableConfig::Some(_) | TableConfig::Exclude(_))

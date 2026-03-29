@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use surrealdb_types::{Error as TypesError, SurrealValue, kind, object};
 use uuid::Uuid;
 
-use crate::dbs::{QueryResult, QueryType};
+use crate::query_results::{QueryResult, QueryType};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[non_exhaustive]

@@ -1,4 +1,4 @@
-pub use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder, QueryType, Status};
+pub use surrealdb_sdk_core::query_results::{QueryResult, QueryResultBuilder, QueryType, Status};
 
 use crate::expr::TopLevelExpr;
 
