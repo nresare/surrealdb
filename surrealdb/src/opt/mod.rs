@@ -1,6 +1,7 @@
 //! The different options and types for use in API functions
 
 pub mod auth;
+#[cfg(storage)]
 pub mod capabilities;
 
 mod config;
@@ -16,6 +17,8 @@ pub use endpoint::*;
 pub use export::*;
 pub use query::*;
 pub use resource::*;
+#[cfg(storage)]
+pub use capabilities::*;
 #[cfg(any(feature = "native-tls", feature = "rustls"))]
 pub use tls::*;
 pub use websocket::*;

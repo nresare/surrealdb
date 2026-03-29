@@ -12,6 +12,7 @@ pub mod local;
 #[cfg(any(feature = "protocol-http", feature = "protocol-ws"))]
 pub mod remote;
 #[doc(hidden)]
+#[cfg(storage)]
 pub mod tasks;
 
 use std::pin::Pin;

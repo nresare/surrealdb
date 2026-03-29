@@ -16,9 +16,9 @@ use std::time::Duration;
 
 use async_channel::Sender;
 use futures::{Sink, SinkExt};
-use surrealdb_core::dbs::{QueryResult, QueryResultBuilder};
-use surrealdb_core::iam::token::Token;
-use surrealdb_core::rpc::{DbResponse, DbResult};
+use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder};
+use surrealdb_sdk_core::iam::token::Token;
+use surrealdb_sdk_core::rpc::{DbResponse, DbResult};
 use surrealdb_types::{AuthError, Error as TypesError, NotAllowedError};
 use tokio::sync::RwLock;
 use uuid::Uuid;
@@ -118,7 +118,7 @@ trait WsMessage: Sized + Clone + Unpin + Send {
 /// Serialize a router request to a WebSocket message.
 fn serialize_request<M: WsMessage>(request: RouterRequest) -> M {
 	let request_value = request.into_value();
-	let payload = surrealdb_core::rpc::format::flatbuffers::encode(&request_value)
+	let payload = surrealdb_sdk_core::rpc::format::flatbuffers::encode(&request_value)
 		.expect("router request should serialize");
 	M::binary(payload)
 }
@@ -502,7 +502,7 @@ async fn handle_parse_error(
 		session_id: Option<Uuid>,
 	}
 
-	match surrealdb_core::rpc::format::flatbuffers::decode::<ErrorResponse>(binary) {
+	match surrealdb_sdk_core::rpc::format::flatbuffers::decode::<ErrorResponse>(binary) {
 		Ok(ErrorResponse {
 			id,
 			session_id,
@@ -729,7 +729,7 @@ impl Surreal<Client> {
 mod tests {
 	use std::sync::Arc;
 
-	use surrealdb_core::rpc::DbResult;
+	use surrealdb_sdk_core::rpc::DbResult;
 	use surrealdb_types::Error as TypesError;
 	use tokio::sync::RwLock;
 	use uuid::Uuid;

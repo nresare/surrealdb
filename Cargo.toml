@@ -6,6 +6,7 @@ members = [
     # SurrealDB crates
     "surrealdb",
     "surrealdb/core",
+    "surrealdb/sdk-core",
     "surrealdb/server",
     "surrealdb/types",
     "surrealdb/types/derive",
@@ -43,6 +44,7 @@ categories = ["database-implementations", "data-structures", "embedded"]
 # SurrealDB crates
 surrealdb = { version = "3.1.0-alpha", path = "surrealdb" }
 surrealdb-core = { version = "3.1.0-alpha", path = "surrealdb/core", default-features = false }
+surrealdb-sdk-core = { version = "3.1.0-alpha", path = "surrealdb/sdk-core", default-features = false }
 surrealdb-server = { version = "3.1.0-alpha", path = "surrealdb/server", default-features = false }
 surrealdb-types = { version = "3.1.0-alpha", path = "surrealdb/types" }
 surrealdb-types-derive = { version = "3.1.0-alpha", path = "surrealdb/types/derive" }

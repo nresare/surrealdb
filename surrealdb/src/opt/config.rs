@@ -2,9 +2,12 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
+#[cfg(storage)]
 use surrealdb_core::dbs::Capabilities as CoreCapabilities;
+#[cfg(storage)]
 use surrealdb_core::iam::Level;
 
+#[cfg(storage)]
 use crate::opt::capabilities::Capabilities;
 use crate::opt::websocket::WebsocketConfig;
 
@@ -19,9 +22,13 @@ pub struct Config {
 	pub(crate) tls_config: Option<super::Tls>,
 	// Only used by the local engines
 	// `Level::No` in this context means no authentication information was configured
+	#[cfg(storage)]
 	pub(crate) auth: Level,
+	#[cfg(storage)]
 	pub(crate) username: String,
+	#[cfg(storage)]
 	pub(crate) password: String,
+	#[cfg(storage)]
 	pub(crate) capabilities: CoreCapabilities,
 	pub(crate) websocket: WebsocketConfig,
 	#[cfg(storage)]
@@ -63,6 +70,7 @@ impl Config {
 	}
 
 	/// Set the default user
+	#[cfg(storage)]
 	pub fn user(mut self, user: crate::opt::auth::Root) -> Self {
 		self.auth = Level::Root;
 		user.username.clone_into(&mut self.username);
@@ -95,6 +103,7 @@ impl Config {
 	}
 
 	/// Set the capabilities for the database
+	#[cfg(storage)]
 	pub fn capabilities(mut self, capabilities: Capabilities) -> Self {
 		self.capabilities = capabilities.into();
 		self

@@ -1,0 +1,26 @@
+[package]
+name = "surrealdb-sdk-core"
+publish = true
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+license-file.workspace = true
+
+[features]
+arbitrary = []
+
+[dependencies]
+humantime.workspace = true
+revision.workspace = true
+serde = { workspace = true, features = ["derive"] }
+surrealdb-types.workspace = true
+uuid = { workspace = true, features = ["serde", "v4", "v7"] }
+web-time.workspace = true
+
+[lints]
+workspace = true

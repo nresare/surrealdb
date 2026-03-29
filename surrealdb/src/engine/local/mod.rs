@@ -167,16 +167,19 @@ use async_channel::Sender;
 use futures::StreamExt;
 #[cfg(not(target_family = "wasm"))]
 use futures::stream::poll_fn;
-use surrealdb_core::dbs::{QueryResult, QueryResultBuilder, Session};
+use surrealdb_core::dbs::{QueryResult as CoreQueryResult, Session};
 use surrealdb_core::iam;
 #[cfg(not(target_family = "wasm"))]
-use surrealdb_core::kvs::export::Config as DbExportConfig;
 use surrealdb_core::kvs::{Datastore, LockType, Transaction, TransactionType};
 #[cfg(all(not(target_family = "wasm"), feature = "ml"))]
 use surrealdb_core::{
 	iam::{Action, ResourceKind, check::check_ns_db},
 	ml::storage::surml_file::SurMlFile,
 };
+use surrealdb_sdk_core::dbs::{QueryResult, QueryResultBuilder};
+use surrealdb_sdk_core::iam::Token as SdkToken;
+#[cfg(not(target_family = "wasm"))]
+use surrealdb_sdk_core::kvs::export::Config as DbExportConfig;
 use surrealdb_types::Error as TypesError;
 use tokio::sync::RwLock;
 #[cfg(not(target_family = "wasm"))]
@@ -471,12 +474,30 @@ impl SessionState {
 	}
 }
 
+fn core_query_result_to_sdk(result: CoreQueryResult) -> QueryResult {
+	QueryResult::from_value(result.into_value()).expect("core and sdk query result shapes match")
+}
+
+fn core_token_to_sdk(token: iam::Token) -> SdkToken {
+	SdkToken::from_value(token.into_value()).expect("core and sdk token shapes match")
+}
+
+fn sdk_token_to_core(token: SdkToken) -> iam::Token {
+	iam::Token::from_value(token.into_value()).expect("core and sdk token shapes match")
+}
+
+#[cfg(not(target_family = "wasm"))]
+fn sdk_export_config_to_core(config: DbExportConfig) -> surrealdb_core::kvs::export::Config {
+	surrealdb_core::kvs::export::Config::from_value(config.into_value())
+		.expect("core and sdk export config shapes match")
+}
+
 #[cfg(not(target_family = "wasm"))]
 async fn export_file(
 	kvs: &Datastore,
 	sess: &Session,
 	chn: async_channel::Sender<Vec<u8>>,
-	config: Option<DbExportConfig>,
+	config: Option<surrealdb_core::kvs::export::Config>,
 ) -> Result<(), crate::Error> {
 	let res = match config {
 		Some(config) => {
@@ -562,7 +583,12 @@ async fn kill_live_query(
 ) -> Result<Vec<QueryResult>, TypesError> {
 	let sql = format!("KILL {id}");
 
-	let results = kvs.execute(&sql, session, Some(vars)).await?;
+	let results = kvs
+		.execute(&sql, session, Some(vars))
+		.await?
+		.into_iter()
+		.map(core_query_result_to_sdk)
+		.collect();
 	Ok(results)
 }
 
@@ -576,10 +602,10 @@ async fn router(
 			namespace,
 			database,
 		} => {
-			let result = {
+			let result = core_query_result_to_sdk({
 				kvs.process_use(None, &mut *state.session.write().await, namespace, database)
 					.await?
-			};
+			});
 			Ok(vec![result])
 		}
 		Command::Signup {
@@ -638,8 +664,8 @@ async fn router(
 			let query_result = QueryResultBuilder::started_now();
 			// Extract the access token and check if this token supports refresh
 			let (access, with_refresh) = match &token {
-				iam::Token::Access(access) => (access, false),
-				iam::Token::WithRefresh {
+				SdkToken::Access(access) => (access, false),
+				SdkToken::WithRefresh {
 					access,
 					..
 				} => (access, true),
@@ -654,15 +680,18 @@ async fn router(
 						// If the access token is expired and we have a refresh token,
 						// automatically attempt to refresh and return new tokens.
 						if with_refresh && surrealdb_core::iam::is_expired_token_error(&error) {
-							let result =
-								match token.refresh(kvs, &mut *state.session.write().await).await {
-									Ok(token) => {
-										query_result.finish_with_result(Ok(token.into_value()))
-									}
-									Err(error) => query_result.finish_with_result(Err(
-										TypesError::internal(error.to_string()),
-									)),
-								};
+							let result = match sdk_token_to_core(token)
+								.refresh(kvs, &mut *state.session.write().await)
+								.await
+							{
+								Ok(token) => {
+									let token = core_token_to_sdk(token);
+									query_result.finish_with_result(Ok(token.into_value()))
+								}
+								Err(error) => query_result.finish_with_result(Err(
+									TypesError::internal(error.to_string()),
+								)),
+							};
 							return Ok(vec![result]);
 						}
 						// If authentication failed and automatic refresh isn't applicable,
@@ -680,8 +709,14 @@ async fn router(
 			// Refresh command: Exchange a refresh token for new access and refresh tokens
 			let query_result = QueryResultBuilder::started_now();
 			let result = {
-				match token.refresh(kvs, &mut *state.session.write().await).await {
-					Ok(token) => query_result.finish_with_result(Ok(token.into_value())),
+				match sdk_token_to_core(token)
+					.refresh(kvs, &mut *state.session.write().await)
+					.await
+				{
+					Ok(token) => {
+						let token = core_token_to_sdk(token);
+						query_result.finish_with_result(Ok(token.into_value()))
+					}
 					Err(error) => query_result
 						.finish_with_result(Err(TypesError::internal(error.to_string()))),
 				}
@@ -718,7 +753,7 @@ async fn router(
 		} => {
 			// Revoke command: Explicitly invalidate a refresh token to prevent future use
 			let query_result = QueryResultBuilder::started_now();
-			let result = match token.revoke_refresh_token(kvs).await {
+			let result = match sdk_token_to_core(token).revoke_refresh_token(kvs).await {
 				Ok(_) => query_result.finish_with_result(Ok(Value::None)),
 				Err(error) => {
 					query_result.finish_with_result(Err(TypesError::internal(error.to_string())))
@@ -766,6 +801,9 @@ async fn router(
 						tx,
 					)
 					.await?
+					.into_iter()
+					.map(core_query_result_to_sdk)
+					.collect()
 				} else {
 					// Transaction not found - return error
 					return Ok(vec![QueryResultBuilder::started_now().finish_with_result(Err(
@@ -777,7 +815,11 @@ async fn router(
 				}
 			} else {
 				// No transaction - use normal execution
-				kvs.execute(query.as_ref(), &*state.session.read().await, Some(vars)).await?
+				kvs.execute(query.as_ref(), &*state.session.read().await, Some(vars))
+					.await?
+					.into_iter()
+					.map(core_query_result_to_sdk)
+					.collect()
 			};
 
 			Ok(response)
@@ -823,7 +865,7 @@ async fn router(
 
 			// Write to channel.
 			let session = state.session.read().await.clone();
-			let export = export_file(kvs, &session, tx, config);
+			let export = export_file(kvs, &session, tx, config.map(sdk_export_config_to_core));
 
 			// Read from channel and write to pipe.
 			let bridge = async move {
@@ -922,7 +964,9 @@ async fn router(
 			let session = state.session.read().await.clone();
 			tokio::spawn(async move {
 				let export = async {
-					if let Err(error) = export_file(&kvs, &session, tx, config).await {
+					if let Err(error) =
+						export_file(&kvs, &session, tx, config.map(sdk_export_config_to_core)).await
+					{
 						bytes.send(Err(error)).await.ok();
 					}
 				};
@@ -1153,7 +1197,10 @@ async fn router(
 			// Execute the query
 			let results = kvs
 				.execute(&sql, &*state.session.read().await, Some(state.vars.read().await.clone()))
-				.await?;
+				.await?
+				.into_iter()
+				.map(core_query_result_to_sdk)
+				.collect();
 			Ok(results)
 		}
 		Command::Attach {

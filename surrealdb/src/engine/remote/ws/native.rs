@@ -349,7 +349,7 @@ mod tests {
 	use flate2::Compression;
 	use flate2::write::GzEncoder;
 	use rand::{Rng, thread_rng};
-	use surrealdb_core::rpc;
+	use surrealdb_sdk_core::rpc;
 	use web_time::SystemTime;
 
 	use crate::types::{Array, Value};
@@ -386,7 +386,7 @@ mod tests {
 		const FLATBUFFERS_COMPRESSED: &str = "Flatbuffers Compressed Vec<Value>";
 		{
 			let (duration, payload) =
-				timed(&|| surrealdb_core::rpc::format::flatbuffers::encode(&vector).unwrap());
+				timed(&|| surrealdb_sdk_core::rpc::format::flatbuffers::encode(&vector).unwrap());
 			ref_payload = payload.len() as f32;
 			results.push((payload.len(), FLATBUFFERS, duration, 1.0));
 
