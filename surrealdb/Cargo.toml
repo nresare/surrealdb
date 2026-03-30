@@ -16,16 +16,17 @@ license-file.workspace = true
 [features]
 # Public features
 default = ["protocol-ws", "rustls"]
-allocator = ["surrealdb-core/allocator"]
+allocator = ["surrealdb-core?/allocator"]
+parse = ["dep:surrealdb-core"]
 protocol-http = ["dep:reqwest"]
 protocol-ws = ["dep:tokio-tungstenite", "tokio/time"]
-kv-mem = ["surrealdb-core/kv-mem", "tokio/time"]
-kv-indxdb = ["surrealdb-core/kv-indxdb"]
-kv-rocksdb = ["surrealdb-core/kv-rocksdb", "tokio/time"]
-kv-tikv = ["surrealdb-core/kv-tikv", "tokio/time"]
-kv-surrealkv = ["surrealdb-core/kv-surrealkv", "tokio/time"]
-scripting = ["surrealdb-core/scripting"]
-http = ["surrealdb-core/http"]
+kv-mem = ["dep:surrealdb-core", "surrealdb-core/kv-mem", "tokio/time"]
+kv-indxdb = ["dep:surrealdb-core", "surrealdb-core/kv-indxdb"]
+kv-rocksdb = ["dep:surrealdb-core", "surrealdb-core/kv-rocksdb", "tokio/time"]
+kv-tikv = ["dep:surrealdb-core", "surrealdb-core/kv-tikv", "tokio/time"]
+kv-surrealkv = ["dep:surrealdb-core", "surrealdb-core/kv-surrealkv", "tokio/time"]
+scripting = ["dep:surrealdb-core", "surrealdb-core/scripting"]
+http = ["dep:surrealdb-core", "surrealdb-core/http"]
 native-tls = [
     "dep:native-tls",
     "reqwest?/native-tls",
@@ -36,10 +37,10 @@ rustls = [
     "reqwest?/default-tls",
     "tokio-tungstenite?/rustls-tls-webpki-roots",
 ]
-ml = ["surrealdb-core/ml"]
-jwks = ["surrealdb-core/jwks"]
-arbitrary = ["surrealdb-core/arbitrary"]
-allocation-tracking = ["surrealdb-core/allocation-tracking"]
+ml = ["dep:surrealdb-core", "surrealdb-core/ml"]
+jwks = ["dep:surrealdb-core", "surrealdb-core/jwks"]
+arbitrary = ["dep:surrealdb-core", "surrealdb-core/arbitrary"]
+allocation-tracking = ["dep:surrealdb-core", "surrealdb-core/allocation-tracking"]
 
 [package.metadata.docs.rs]
 rustdoc-args = ["--cfg", "docsrs"]
@@ -57,7 +58,8 @@ targets = []
 
 [dependencies]
 # workspace internal dependencies
-surrealdb-core = { workspace = true, default-features = false }
+surrealdb-sdk-core = { workspace = true, default-features = false }
+surrealdb-core = { workspace = true, default-features = false, optional = true }
 surrealdb-types.workspace = true
 surrealdb-types-derive = { workspace = true, features = ["sdk-path"] }
 

@@ -5,6 +5,7 @@ members = [
     ".",
     # SurrealDB crates
     "surrealdb",
+    "surrealdb/sdk-core",
     "surrealdb/core",
     "surrealdb/server",
     "surrealdb/types",
@@ -42,6 +43,7 @@ categories = ["database-implementations", "data-structures", "embedded"]
 [workspace.dependencies]
 # SurrealDB crates
 surrealdb = { version = "3.0.5", path = "surrealdb" }
+surrealdb-sdk-core = { version = "3.0.5", path = "surrealdb/sdk-core", default-features = false }
 surrealdb-core = { version = "3.0.5", path = "surrealdb/core", default-features = false }
 surrealdb-server = { version = "3.0.5", path = "surrealdb/server", default-features = false }
 surrealdb-types = { version = "3.0.5", path = "surrealdb/types" }

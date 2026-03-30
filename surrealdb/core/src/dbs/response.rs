@@ -6,8 +6,6 @@ use serde::{Deserialize, Serialize};
 use surrealdb_types::{Error as TypesError, ErrorDetails, Kind, SurrealValue, Value, kind, object};
 use web_time::Instant;
 
-use crate::expr::TopLevelExpr;
-
 #[revisioned(revision = 1)]
 #[derive(
 	Debug,
@@ -43,17 +41,6 @@ impl fmt::Display for QueryType {
 			QueryType::Other => "other".fmt(f),
 			QueryType::Live => "live".fmt(f),
 			QueryType::Kill => "kill".fmt(f),
-		}
-	}
-}
-
-impl QueryType {
-	/// Returns the query type for the given toplevel expression.
-	pub(crate) fn for_toplevel_expr(expr: &TopLevelExpr) -> Self {
-		match expr {
-			TopLevelExpr::Live(_) => QueryType::Live,
-			TopLevelExpr::Kill(_) => QueryType::Kill,
-			_ => QueryType::Other,
 		}
 	}
 }

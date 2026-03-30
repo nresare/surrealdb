@@ -24,6 +24,23 @@ compile_error!("The `ml` feature is not supported on Wasm.");
 #[macro_use]
 extern crate tracing;
 
+#[cfg(any(
+	feature = "kv-mem",
+	feature = "kv-tikv",
+	feature = "kv-rocksdb",
+	feature = "kv-indxdb",
+	feature = "kv-surrealkv",
+))]
+pub(crate) use surrealdb_core as client_core;
+#[cfg(not(any(
+	feature = "kv-mem",
+	feature = "kv-tikv",
+	feature = "kv-rocksdb",
+	feature = "kv-indxdb",
+	feature = "kv-surrealkv",
+)))]
+pub(crate) use surrealdb_sdk_core as client_core;
+
 pub mod engine;
 #[doc(hidden)]
 #[cfg(feature = "protocol-http")]
@@ -40,6 +57,7 @@ pub mod channel {
 	pub use async_channel::{Receiver, Sender, bounded, unbounded};
 }
 
+#[cfg(feature = "parse")]
 pub mod parse {
 	pub use surrealdb_core::syn::value;
 }

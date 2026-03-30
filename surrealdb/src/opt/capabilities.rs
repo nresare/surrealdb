@@ -3,8 +3,8 @@
 use std::collections::HashSet;
 use std::mem;
 
-use surrealdb_core::dbs::NewPlannerStrategy;
-use surrealdb_core::dbs::capabilities::{
+use crate::client_core::dbs::NewPlannerStrategy;
+use crate::client_core::dbs::capabilities::{
 	Capabilities as CoreCapabilities, ExperimentalTarget, FuncTarget, ParseFuncTargetError,
 	ParseNetTargetError, Targets,
 };

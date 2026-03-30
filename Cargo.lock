@@ -6911,6 +6911,7 @@ dependencies = [
  "serde_json",
  "serial_test",
  "surrealdb-core",
+ "surrealdb-sdk-core",
  "surrealdb-types",
  "surrealdb-types-derive",
  "temp-dir",
@@ -7108,6 +7109,27 @@ checksum = "057727f56d48825ddbe45e4e7401cda6e99d864fbc004e7474b4689a5e72c86d"
 dependencies = [
  "libc",
  "surrealdb-librocksdb-sys",
+]
+
+[[package]]
+name = "surrealdb-sdk-core"
+version = "3.0.5"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "http 1.4.0",
+ "humantime",
+ "ipnet",
+ "jsonwebtoken",
+ "revision",
+ "serde",
+ "serde_json",
+ "surrealdb-types",
+ "tokio",
+ "tracing",
+ "url",
+ "uuid",
+ "web-time",
 ]
 
 [[package]]

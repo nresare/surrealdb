@@ -64,9 +64,9 @@ use futures::TryStreamExt;
 use reqwest::RequestBuilder;
 use reqwest::header::{ACCEPT, CONTENT_TYPE, HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
-use surrealdb_core::dbs::{QueryResult, QueryResultBuilder};
-use surrealdb_core::iam::Token as CoreToken;
-use surrealdb_core::rpc::{self, DbResponse, DbResult};
+use crate::client_core::dbs::{QueryResult, QueryResultBuilder};
+use crate::client_core::iam::Token as CoreToken;
+use crate::client_core::rpc::{self, DbResponse, DbResult};
 use surrealdb_types::{AuthError, NotAllowedError};
 #[cfg(not(target_family = "wasm"))]
 use tokio::fs::OpenOptions;
@@ -338,9 +338,9 @@ impl Surreal<Client> {
 
 pub(crate) fn default_headers() -> HeaderMap {
 	let mut headers = HeaderMap::new();
-	headers.insert(ACCEPT, HeaderValue::from_static(surrealdb_core::api::format::FLATBUFFERS));
+	headers.insert(ACCEPT, HeaderValue::from_static(crate::client_core::api::format::FLATBUFFERS));
 	headers
-		.insert(CONTENT_TYPE, HeaderValue::from_static(surrealdb_core::api::format::FLATBUFFERS));
+		.insert(CONTENT_TYPE, HeaderValue::from_static(crate::client_core::api::format::FLATBUFFERS));
 	headers
 }
 
@@ -472,7 +472,7 @@ async fn import(request: RequestBuilder, path: PathBuf) -> Result<()> {
 	};
 
 	let res = request
-		.header(ACCEPT, surrealdb_core::api::format::FLATBUFFERS)
+		.header(ACCEPT, crate::client_core::api::format::FLATBUFFERS)
 		.body(file)
 		.send()
 		.await
@@ -497,7 +497,7 @@ async fn import(request: RequestBuilder, path: PathBuf) -> Result<()> {
 
 	let bytes = res.bytes().await.map_err(crate::std_error_to_types_error)?;
 
-	let value: Value = surrealdb_core::rpc::format::flatbuffers::decode(&bytes)
+	let value: Value = crate::client_core::rpc::format::flatbuffers::decode(&bytes)
 		.map_err(|x| format!("Failed to deserialize flatbuffers payload: {x:?}"))
 		.map_err(|e| {
 			crate::Error::internal(format!("The server returned an unexpected response: {e}"))
@@ -547,7 +547,7 @@ async fn send_request(
 	let url = base_url.join(RPC_PATH).expect("valid RPC path");
 
 	let req_value = req.into_value();
-	let body = surrealdb_core::rpc::format::flatbuffers::encode(&req_value)
+	let body = crate::client_core::rpc::format::flatbuffers::encode(&req_value)
 		.map_err(|x| format!("Failed to serialize to flatbuffers: {x}"))
 		.map_err(|e| {
 			crate::Error::internal(format!(
@@ -567,7 +567,7 @@ async fn send_request(
 		.map_err(crate::std_error_to_types_error)?;
 	let bytes = response.bytes().await.map_err(crate::std_error_to_types_error)?;
 
-	let response: DbResponse = surrealdb_core::rpc::format::flatbuffers::decode(&bytes)
+	let response: DbResponse = crate::client_core::rpc::format::flatbuffers::decode(&bytes)
 		.map_err(|x| format!("Failed to deserialize flatbuffers payload: {x}"))
 		.map_err(|e| {
 			crate::Error::internal(format!("The server returned an unexpected response: {e}"))
@@ -828,7 +828,7 @@ async fn router(
 			key,
 			value,
 		} => {
-			surrealdb_core::rpc::check_protected_param(&key)?;
+			crate::client_core::rpc::check_protected_param(&key)?;
 			let req = Command::Set {
 				key,
 				value,

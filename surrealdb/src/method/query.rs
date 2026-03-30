@@ -8,8 +8,8 @@ use futures::StreamExt;
 use futures::future::Either;
 use futures::stream::SelectAll;
 use indexmap::IndexMap;
-use surrealdb_core::dbs::QueryType;
-use surrealdb_core::rpc::DbResultStats;
+use crate::client_core::dbs::QueryType;
+use crate::client_core::rpc::DbResultStats;
 use surrealdb_types::Error as TypesError;
 use uuid::Uuid;
 

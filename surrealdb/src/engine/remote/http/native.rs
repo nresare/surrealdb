@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use async_channel::Receiver;
 use reqwest::ClientBuilder;
-use surrealdb_core::cnf::SURREALDB_USER_AGENT;
+use crate::client_core::cnf::SURREALDB_USER_AGENT;
 use tokio::sync::watch;
 use url::Url;
 
