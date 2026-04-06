@@ -1,1 +1,3 @@
-//! Workspace skeleton for the future RocksDB storage backend.
+//! Shared metadata for the RocksDB storage backend.
+
+pub const NAME: &str = "rocksdb";

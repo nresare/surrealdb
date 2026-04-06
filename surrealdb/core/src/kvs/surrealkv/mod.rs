@@ -164,7 +164,7 @@ impl Datastore {
 #[cfg_attr(not(target_family = "wasm"), async_trait::async_trait)]
 impl Transactable for Transaction {
 	fn kind(&self) -> &'static str {
-		"surrealkv"
+		surrealdb_storage_surrealkv::NAME
 	}
 
 	/// Check if closed

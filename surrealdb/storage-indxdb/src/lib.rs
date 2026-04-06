@@ -1,1 +1,3 @@
-//! Workspace skeleton for the future IndxDB storage backend.
+//! Shared metadata for the IndxDB storage backend.
+
+pub const NAME: &str = "indxdb";

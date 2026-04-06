@@ -97,6 +97,11 @@ surrealdb-values = { workspace = true }
 surrealdb-query = { workspace = true }
 surrealdb-schema = { workspace = true }
 surrealdb-storage = { workspace = true }
+surrealdb-storage-mem = { workspace = true }
+surrealdb-storage-rocksdb = { workspace = true }
+surrealdb-storage-surrealkv = { workspace = true }
+surrealdb-storage-tikv = { workspace = true }
+surrealdb-storage-indxdb = { workspace = true }
 vart.workspace = true
 
 # External KV stores

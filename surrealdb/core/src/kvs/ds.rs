@@ -20,6 +20,11 @@ use bytes::{Bytes, BytesMut};
 use futures::{Future, Stream};
 use rand::{Rng, thread_rng};
 use reblessive::TreeStack;
+use surrealdb_storage_indxdb::NAME as INDXDB_BACKEND;
+use surrealdb_storage_mem::{ALIAS as MEMORY_ALIAS, NAME as MEMORY_BACKEND, matches_scheme as is_memory_scheme};
+use surrealdb_storage_rocksdb::NAME as ROCKSDB_BACKEND;
+use surrealdb_storage_surrealkv::NAME as SURREALKV_BACKEND;
+use surrealdb_storage_tikv::NAME as TIKV_BACKEND;
 use surrealdb_types::{AuthError, Error as TypesError, SurrealValue, object};
 #[cfg(not(target_family = "wasm"))]
 use tokio::spawn;
@@ -342,10 +347,8 @@ impl TransactionBuilderFactory for CommunityComposer {
 		// Extract the scheme and path components
 		let (flavour, path) = match raw_path.split_once("://").or_else(|| raw_path.split_once(':'))
 		{
-			None if raw_path == "memory" => ("memory", ""),
-			// Treat "mem" as an alias for "memory"
-			None if raw_path == "mem" => ("memory", ""),
-			Some(("mem", path)) => ("memory", path),
+			None if is_memory_scheme(raw_path) => (MEMORY_BACKEND, ""),
+			Some((MEMORY_ALIAS, path)) => (MEMORY_BACKEND, path),
 			Some((flavour, path)) => (flavour, path),
 			// Validated already in the CLI, should never happen
 			_ => bail!(Error::Unreachable("Provide a valid database path parameter".to_owned())),
@@ -366,7 +369,7 @@ impl TransactionBuilderFactory for CommunityComposer {
 		// Initiate the desired datastore
 		match (flavour, path) {
 			// Initiate an in-memory datastore
-			(flavour @ "memory", path) => {
+			(flavour @ MEMORY_BACKEND, path) => {
 				#[cfg(feature = "kv-mem")]
 				{
 					// Create a new blocking threadpool
@@ -380,10 +383,10 @@ impl TransactionBuilderFactory for CommunityComposer {
 					Ok(Box::<DatastoreFlavor>::new(v))
 				}
 				#[cfg(not(feature = "kv-mem"))]
-				bail!(Error::Kvs(crate::kvs::Error::Datastore("Cannot connect to the `memory` storage engine as it is not enabled in this build of SurrealDB".to_owned())));
+				bail!(Error::Kvs(crate::kvs::Error::Datastore(format!("Cannot connect to the `{MEMORY_BACKEND}` storage engine as it is not enabled in this build of SurrealDB"))));
 			}
 			// Initiate a RocksDB datastore
-			(flavour @ "rocksdb", path) => {
+			(flavour @ ROCKSDB_BACKEND, path) => {
 				#[cfg(feature = "kv-rocksdb")]
 				{
 					// Create a new blocking threadpool
@@ -399,10 +402,10 @@ impl TransactionBuilderFactory for CommunityComposer {
 					Ok(Box::<DatastoreFlavor>::new(v))
 				}
 				#[cfg(not(feature = "kv-rocksdb"))]
-				bail!(Error::Kvs(crate::kvs::Error::Datastore("Cannot connect to the `rocksdb` storage engine as it is not enabled in this build of SurrealDB".to_owned())));
+				bail!(Error::Kvs(crate::kvs::Error::Datastore(format!("Cannot connect to the `{ROCKSDB_BACKEND}` storage engine as it is not enabled in this build of SurrealDB"))));
 			}
 			// Initiate a SurrealKV database
-			(flavour @ "surrealkv", path) => {
+			(flavour @ SURREALKV_BACKEND, path) => {
 				#[cfg(feature = "kv-surrealkv")]
 				{
 					// Create a new blocking threadpool
@@ -418,10 +421,10 @@ impl TransactionBuilderFactory for CommunityComposer {
 					Ok(Box::<DatastoreFlavor>::new(v))
 				}
 				#[cfg(not(feature = "kv-surrealkv"))]
-				bail!(Error::Kvs(crate::kvs::Error::Datastore("Cannot connect to the `surrealkv` storage engine as it is not enabled in this build of SurrealDB".to_owned())));
+				bail!(Error::Kvs(crate::kvs::Error::Datastore(format!("Cannot connect to the `{SURREALKV_BACKEND}` storage engine as it is not enabled in this build of SurrealDB"))));
 			}
 			// Initiate an IndxDB database
-			(flavour @ "indxdb", path) => {
+			(flavour @ INDXDB_BACKEND, path) => {
 				#[cfg(feature = "kv-indxdb")]
 				{
 					let v =
@@ -430,10 +433,10 @@ impl TransactionBuilderFactory for CommunityComposer {
 					Ok(Box::<DatastoreFlavor>::new(v))
 				}
 				#[cfg(not(feature = "kv-indxdb"))]
-				bail!(Error::Kvs(crate::kvs::Error::Datastore("Cannot connect to the `indxdb` storage engine as it is not enabled in this build of SurrealDB".to_owned())));
+				bail!(Error::Kvs(crate::kvs::Error::Datastore(format!("Cannot connect to the `{INDXDB_BACKEND}` storage engine as it is not enabled in this build of SurrealDB"))));
 			}
 			// Initiate a TiKV datastore
-			(flavour @ "tikv", path) => {
+			(flavour @ TIKV_BACKEND, path) => {
 				#[cfg(feature = "kv-tikv")]
 				{
 					let v = super::tikv::Datastore::new(&path).await.map(DatastoreFlavor::TiKV)?;
@@ -441,7 +444,7 @@ impl TransactionBuilderFactory for CommunityComposer {
 					Ok(Box::<DatastoreFlavor>::new(v))
 				}
 				#[cfg(not(feature = "kv-tikv"))]
-				bail!(Error::Kvs(crate::kvs::Error::Datastore("Cannot connect to the `tikv` storage engine as it is not enabled in this build of SurrealDB".to_owned())));
+				bail!(Error::Kvs(crate::kvs::Error::Datastore(format!("Cannot connect to the `{TIKV_BACKEND}` storage engine as it is not enabled in this build of SurrealDB"))));
 			}
 			// The datastore path is not valid
 			(flavour, path) => {
@@ -457,13 +460,13 @@ impl TransactionBuilderFactory for CommunityComposer {
 		// Strip query parameters before validating the scheme
 		let scheme_part = v.split_once('?').map(|(s, _)| s).unwrap_or(v);
 		match scheme_part {
-			"memory" => Ok(v.to_string()),
-			"mem" => Ok(v.to_string()),
+			scheme if is_memory_scheme(scheme) => Ok(v.to_string()),
 			v_s if v_s.starts_with("file:") => Ok(v.to_string()),
-			v_s if v_s.starts_with("rocksdb:") => Ok(v.to_string()),
-			v_s if v_s.starts_with("surrealkv:") => Ok(v.to_string()),
-			v_s if v_s.starts_with("mem:") => Ok(v.to_string()),
-			v_s if v_s.starts_with("tikv:") => Ok(v.to_string()),
+			v_s if v_s.starts_with(&format!("{ROCKSDB_BACKEND}:")) => Ok(v.to_string()),
+			v_s if v_s.starts_with(&format!("{SURREALKV_BACKEND}:")) => Ok(v.to_string()),
+			v_s if v_s.starts_with(&format!("{MEMORY_ALIAS}:")) => Ok(v.to_string()),
+			v_s if v_s.starts_with(&format!("{TIKV_BACKEND}:")) => Ok(v.to_string()),
+			v_s if v_s.starts_with(&format!("{INDXDB_BACKEND}:")) => Ok(v.to_string()),
 			_ => bail!("Provide a valid database path parameter"),
 		}
 	}
@@ -562,15 +565,15 @@ impl Display for DatastoreFlavor {
 		#![allow(unused_variables)]
 		match self {
 			#[cfg(feature = "kv-mem")]
-			Self::Mem(_) => write!(f, "memory"),
+			Self::Mem(_) => write!(f, "{MEMORY_BACKEND}"),
 			#[cfg(feature = "kv-rocksdb")]
-			Self::RocksDB(_) => write!(f, "rocksdb"),
+			Self::RocksDB(_) => write!(f, "{ROCKSDB_BACKEND}"),
 			#[cfg(feature = "kv-indxdb")]
-			Self::IndxDB(_) => write!(f, "indxdb"),
+			Self::IndxDB(_) => write!(f, "{INDXDB_BACKEND}"),
 			#[cfg(feature = "kv-tikv")]
-			Self::TiKV(_) => write!(f, "tikv"),
+			Self::TiKV(_) => write!(f, "{TIKV_BACKEND}"),
 			#[cfg(feature = "kv-surrealkv")]
-			Self::SurrealKV(_) => write!(f, "surrealkv"),
+			Self::SurrealKV(_) => write!(f, "{SURREALKV_BACKEND}"),
 			#[allow(unreachable_patterns)]
 			_ => unreachable!(),
 		}

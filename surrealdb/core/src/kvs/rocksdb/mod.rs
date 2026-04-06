@@ -427,7 +427,7 @@ impl Transaction {
 #[cfg_attr(not(target_family = "wasm"), async_trait::async_trait)]
 impl Transactable for Transaction {
 	fn kind(&self) -> &'static str {
-		"rocksdb"
+		surrealdb_storage_rocksdb::NAME
 	}
 
 	/// Check if closed

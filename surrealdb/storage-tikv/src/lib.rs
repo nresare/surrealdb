@@ -1,1 +1,3 @@
-//! Workspace skeleton for the future TiKV storage backend.
+//! Shared metadata for the TiKV storage backend.
+
+pub const NAME: &str = "tikv";

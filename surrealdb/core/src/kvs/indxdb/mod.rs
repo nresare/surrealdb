@@ -62,7 +62,7 @@ impl Datastore {
 #[cfg_attr(not(target_family = "wasm"), async_trait::async_trait)]
 impl Transactable for Transaction {
 	fn kind(&self) -> &'static str {
-		"indxdb"
+		surrealdb_storage_indxdb::NAME
 	}
 
 	/// Check if closed
