@@ -7025,6 +7025,7 @@ dependencies = [
  "storekey",
  "strsim",
  "subtle",
+ "surrealdb-database",
  "surrealdb-index",
  "surrealdb-protocol",
  "surrealdb-query",
@@ -7075,6 +7076,9 @@ version = "3.1.0-alpha"
 [[package]]
 name = "surrealdb-database"
 version = "3.1.0-alpha"
+dependencies = [
+ "web-time",
+]
 
 [[package]]
 name = "surrealdb-index"

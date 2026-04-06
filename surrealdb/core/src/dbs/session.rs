@@ -1,5 +1,3 @@
-use std::fmt;
-use std::str::FromStr;
 use std::sync::Arc;
 
 use chrono::Utc;
@@ -44,42 +42,7 @@ pub struct Session {
 	pub redact_volatile_explain_attrs: bool,
 }
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash)]
-pub enum NewPlannerStrategy {
-	/// Try the new planner for read-only statements, fall back to compute on Unimplemented.
-	#[default]
-	BestEffortReadOnlyStatements,
-	/// Skip the new planner entirely; always use the compute executor.
-	ComputeOnly,
-	/// Require the new planner for all read-only statements.
-	/// Promotes Error::PlannerUnimplemented to Error::Query (hard error) instead of falling back.
-	AllReadOnlyStatements,
-}
-
-impl fmt::Display for NewPlannerStrategy {
-	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		match self {
-			Self::BestEffortReadOnlyStatements => f.write_str("best-effort"),
-			Self::ComputeOnly => f.write_str("compute-only"),
-			Self::AllReadOnlyStatements => f.write_str("all-read-only"),
-		}
-	}
-}
-
-impl FromStr for NewPlannerStrategy {
-	type Err = String;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		match s {
-			"best-effort" => Ok(Self::BestEffortReadOnlyStatements),
-			"compute-only" => Ok(Self::ComputeOnly),
-			"all-read-only" => Ok(Self::AllReadOnlyStatements),
-			_ => Err(format!(
-				"unknown planner strategy: '{s}' (expected 'best-effort', 'compute-only', or 'all-read-only')"
-			)),
-		}
-	}
-}
+pub use surrealdb_database::session::NewPlannerStrategy;
 
 impl Session {
 	/// Set the selected namespace for the session

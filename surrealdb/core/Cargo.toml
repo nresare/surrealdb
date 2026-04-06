@@ -39,7 +39,7 @@ kv-surrealkv = [
     "dep:ext-sort",
     "dep:affinitypool",
 ]
-scripting = ["dep:js"]
+scripting = ["dep:js", "surrealdb-database/scripting"]
 http = ["dep:reqwest"]
 ml = ["dep:surrealml-core"]
 jwks = ["dep:reqwest"]
@@ -104,6 +104,7 @@ surrealdb-storage-tikv = { workspace = true }
 surrealdb-storage-indxdb = { workspace = true }
 surrealdb-index = { workspace = true }
 surrealdb-query-runtime = { workspace = true }
+surrealdb-database = { workspace = true }
 vart.workspace = true
 
 # External KV stores
