@@ -7025,6 +7025,7 @@ dependencies = [
  "storekey",
  "strsim",
  "subtle",
+ "surrealdb-index",
  "surrealdb-protocol",
  "surrealdb-query",
  "surrealdb-rocksdb",

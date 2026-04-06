@@ -5,7 +5,7 @@ use crate::idx::IndexKeyBase;
 use crate::kvs::Transaction;
 use crate::val::RecordIdKey;
 
-pub type DocId = u64;
+pub use surrealdb_index::seqdocids::DocId;
 
 #[derive(Debug, PartialEq)]
 pub(super) enum Resolved {

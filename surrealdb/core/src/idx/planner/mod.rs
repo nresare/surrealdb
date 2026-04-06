@@ -7,11 +7,12 @@ pub(in crate::idx) mod rewriter;
 pub(in crate::idx) mod tree;
 
 use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
 use std::sync::atomic::{self, AtomicU8};
 
 use anyhow::Result;
 use reblessive::tree::Stk;
+pub(crate) use surrealdb_index::planner::RecordStrategy;
+pub use surrealdb_index::planner::ScanDirection;
 
 use crate::catalog::providers::TableProvider;
 use crate::ctx::FrozenContext;
@@ -40,28 +41,6 @@ pub(crate) struct StatementContext<'a> {
 	pub(crate) cond: Option<&'a Cond>,
 	pub(crate) group: Option<&'a Groups>,
 	is_perm: bool,
-}
-
-#[derive(Clone, Copy, Debug)]
-pub(crate) enum RecordStrategy {
-	Count,
-	KeysOnly,
-	KeysAndValues,
-}
-
-#[derive(Clone, Copy, Debug)]
-pub enum ScanDirection {
-	Forward,
-	Backward,
-}
-
-impl Display for ScanDirection {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		match self {
-			ScanDirection::Forward => f.write_str("forward"),
-			ScanDirection::Backward => f.write_str("backward"),
-		}
-	}
 }
 
 #[derive(Clone, Copy, Debug)]

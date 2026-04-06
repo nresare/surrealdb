@@ -102,6 +102,7 @@ surrealdb-storage-rocksdb = { workspace = true }
 surrealdb-storage-surrealkv = { workspace = true }
 surrealdb-storage-tikv = { workspace = true }
 surrealdb-storage-indxdb = { workspace = true }
+surrealdb-index = { workspace = true }
 vart.workspace = true
 
 # External KV stores
