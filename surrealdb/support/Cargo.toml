@@ -4,7 +4,7 @@ publish = false
 edition.workspace = true
 version.workspace = true
 authors.workspace = true
-description = "Workspace skeleton crate for the future support layer"
+description = "Low-level support utilities for the SurrealDB workspace"
 repository.workspace = true
 homepage.workspace = true
 keywords.workspace = true
@@ -15,6 +15,7 @@ license-file.workspace = true
 default = []
 
 [dependencies]
+surrealdb-types = { workspace = true }
 
 [lints]
 workspace = true

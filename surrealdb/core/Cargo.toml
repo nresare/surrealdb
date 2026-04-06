@@ -182,6 +182,7 @@ getrandom = { workspace = true, features = ["wasm_js"] }
 jsonwebtoken = { workspace = true, features = ["rust_crypto"] }
 ring = { workspace = true, features = ["wasm32_unknown_unknown_js"] }
 surrealdb-protocol = { workspace = true, features = ["proto", "flatbuffers"] }
+surrealdb-support = { workspace = true }
 tokio = { workspace = true, default-features = false, features = [
     "rt",
     "sync",
@@ -197,6 +198,7 @@ wasmtimer = { workspace = true, default-features = false, features = ["tokio"] }
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
 surrealdb-protocol = { workspace = true, features = ["proto", "flatbuffers", "rpc"] }
+surrealdb-support = { workspace = true }
 tokio = { workspace = true, default-features = false, features = [
     "macros",
     "io-util",

@@ -7027,6 +7027,7 @@ dependencies = [
  "subtle",
  "surrealdb-protocol",
  "surrealdb-rocksdb",
+ "surrealdb-support",
  "surrealdb-tikv-client",
  "surrealdb-types",
  "surrealism-runtime",
@@ -7242,6 +7243,9 @@ version = "3.1.0-alpha"
 [[package]]
 name = "surrealdb-support"
 version = "3.1.0-alpha"
+dependencies = [
+ "surrealdb-types",
+]
 
 [[package]]
 name = "surrealdb-tikv-client"

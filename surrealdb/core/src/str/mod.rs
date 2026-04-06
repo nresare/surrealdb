@@ -1,5 +1,1 @@
-mod bytes;
-mod duration;
-
-pub use bytes::ParseBytes;
-pub use duration::ParseDuration;
+pub use surrealdb_support::str::{ParseBytes, ParseDuration};
