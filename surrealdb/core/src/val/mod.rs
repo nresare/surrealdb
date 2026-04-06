@@ -54,9 +54,7 @@ pub(crate) use self::table::TableName;
 pub(crate) use self::uuid::Uuid;
 pub(crate) use self::value::{CastError, CoerceError};
 
-/// Marker type for a different serialization format for value which does not encode type
-/// information which is not required for indexing.
-pub enum IndexFormat {}
+pub(crate) use surrealdb_values::IndexFormat;
 
 /// Marker type for value conversions from Value::None
 #[derive(Clone, Copy, Eq, PartialEq, PartialOrd)]

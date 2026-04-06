@@ -4,7 +4,7 @@ publish = false
 edition.workspace = true
 version.workspace = true
 authors.workspace = true
-description = "Workspace skeleton crate for the future values layer"
+description = "Low-level value types for the SurrealDB workspace"
 repository.workspace = true
 homepage.workspace = true
 keywords.workspace = true
@@ -13,8 +13,15 @@ license-file.workspace = true
 
 [features]
 default = []
+arbitrary = ["dep:arbitrary"]
 
 [dependencies]
+arbitrary = { workspace = true, features = ["derive"], optional = true }
+bytes.workspace = true
+hex.workspace = true
+revision.workspace = true
+storekey.workspace = true
+surrealdb-types = { workspace = true }
 
 [lints]
 workspace = true

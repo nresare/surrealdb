@@ -7030,6 +7030,7 @@ dependencies = [
  "surrealdb-support",
  "surrealdb-tikv-client",
  "surrealdb-types",
+ "surrealdb-values",
  "surrealism-runtime",
  "surrealkv",
  "surrealml-core",
@@ -7318,6 +7319,14 @@ dependencies = [
 [[package]]
 name = "surrealdb-values"
 version = "3.1.0-alpha"
+dependencies = [
+ "arbitrary",
+ "bytes",
+ "hex",
+ "revision",
+ "storekey",
+ "surrealdb-types",
+]
 
 [[package]]
 name = "surrealism"
