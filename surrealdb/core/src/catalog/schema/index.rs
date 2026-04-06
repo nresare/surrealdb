@@ -2,8 +2,7 @@ use std::fmt::{self, Display, Formatter};
 use std::hash::{Hash, Hasher};
 
 use anyhow::Result;
-use revision::{DeserializeRevisioned, Revisioned, SerializeRevisioned, revisioned};
-use storekey::{BorrowDecode, Encode};
+use revision::revisioned;
 use surrealdb_types::{SqlFormat, ToSql, write_sql};
 
 use crate::err::Error;
@@ -13,42 +12,9 @@ use crate::kvs::impl_kv_value_revisioned;
 use crate::sql;
 use crate::sql::statements::define::DefineKind;
 use crate::val::{Array, Number, TableName, Value};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Encode, BorrowDecode)]
-#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
-#[repr(transparent)]
-pub struct IndexId(pub u32);
+pub use surrealdb_schema::IndexId;
 
 impl_kv_value_revisioned!(IndexId);
-
-impl Revisioned for IndexId {
-	fn revision() -> u16 {
-		1
-	}
-}
-
-impl SerializeRevisioned for IndexId {
-	#[inline]
-	fn serialize_revisioned<W: std::io::Write>(
-		&self,
-		writer: &mut W,
-	) -> Result<(), revision::Error> {
-		SerializeRevisioned::serialize_revisioned(&self.0, writer)
-	}
-}
-
-impl DeserializeRevisioned for IndexId {
-	#[inline]
-	fn deserialize_revisioned<R: std::io::Read>(reader: &mut R) -> Result<Self, revision::Error> {
-		DeserializeRevisioned::deserialize_revisioned(reader).map(IndexId)
-	}
-}
-
-impl From<u32> for IndexId {
-	fn from(value: u32) -> Self {
-		IndexId(value)
-	}
-}
 
 #[revisioned(revision = 1)]
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]

@@ -1,4 +1,4 @@
-use revision::{DeserializeRevisioned, Revisioned, SerializeRevisioned, revisioned};
+use revision::revisioned;
 use surrealdb_types::{SqlFormat, ToSql, write_sql};
 use uuid::Uuid;
 
@@ -10,35 +10,9 @@ use crate::kvs::impl_kv_value_revisioned;
 use crate::sql;
 use crate::sql::statements::DefineTableStatement;
 use crate::val::{TableName, Value};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
-pub struct TableId(pub u32);
+pub use surrealdb_schema::TableId;
 
 impl_kv_value_revisioned!(TableId);
-
-impl Revisioned for TableId {
-	fn revision() -> u16 {
-		1
-	}
-}
-
-impl SerializeRevisioned for TableId {
-	#[inline]
-	fn serialize_revisioned<W: std::io::Write>(
-		&self,
-		writer: &mut W,
-	) -> Result<(), revision::Error> {
-		SerializeRevisioned::serialize_revisioned(&self.0, writer)
-	}
-}
-
-impl DeserializeRevisioned for TableId {
-	#[inline]
-	fn deserialize_revisioned<R: std::io::Read>(reader: &mut R) -> Result<Self, revision::Error> {
-		DeserializeRevisioned::deserialize_revisioned(reader).map(TableId)
-	}
-}
 
 #[revisioned(revision = 1)]
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]

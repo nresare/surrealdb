@@ -13,8 +13,14 @@ license-file.workspace = true
 
 [features]
 default = []
+arbitrary = ["dep:arbitrary"]
 
 [dependencies]
+revision.workspace = true
+serde = { workspace = true, features = ["derive"] }
+storekey.workspace = true
+surrealdb-types = { workspace = true }
+arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 [lints]
 workspace = true

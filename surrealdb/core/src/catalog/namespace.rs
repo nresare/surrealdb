@@ -1,9 +1,7 @@
-use std::fmt::{Display, Formatter};
-
-use revision::{DeserializeRevisioned, Revisioned, SerializeRevisioned, revisioned};
-use serde::{Deserialize, Serialize};
-use storekey::{BorrowDecode, Encode};
+use revision::revisioned;
 use surrealdb_types::{SqlFormat, ToSql};
+
+pub use surrealdb_schema::NamespaceId;
 
 use crate::expr::statements::info::InfoStructure;
 use crate::kvs::impl_kv_value_revisioned;
@@ -11,60 +9,7 @@ use crate::sql::statements::DefineNamespaceStatement;
 use crate::sql::{Expr, Literal};
 use crate::val::Value;
 
-#[derive(
-	Debug,
-	Clone,
-	Copy,
-	PartialEq,
-	Eq,
-	PartialOrd,
-	Ord,
-	Hash,
-	Serialize,
-	Deserialize,
-	Encode,
-	BorrowDecode,
-)]
-#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
-#[repr(transparent)]
-pub struct NamespaceId(pub u32);
-
 impl_kv_value_revisioned!(NamespaceId);
-
-impl Revisioned for NamespaceId {
-	fn revision() -> u16 {
-		1
-	}
-}
-
-impl SerializeRevisioned for NamespaceId {
-	#[inline]
-	fn serialize_revisioned<W: std::io::Write>(
-		&self,
-		writer: &mut W,
-	) -> Result<(), revision::Error> {
-		SerializeRevisioned::serialize_revisioned(&self.0, writer)
-	}
-}
-
-impl DeserializeRevisioned for NamespaceId {
-	#[inline]
-	fn deserialize_revisioned<R: std::io::Read>(reader: &mut R) -> Result<Self, revision::Error> {
-		DeserializeRevisioned::deserialize_revisioned(reader).map(NamespaceId)
-	}
-}
-
-impl Display for NamespaceId {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}", self.0)
-	}
-}
-
-impl From<u32> for NamespaceId {
-	fn from(value: u32) -> Self {
-		NamespaceId(value)
-	}
-}
 
 #[revisioned(revision = 1)]
 #[derive(Clone, Debug, Eq, PartialEq, PartialOrd, Hash)]

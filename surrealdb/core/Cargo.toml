@@ -54,6 +54,7 @@ arbitrary = [
     "uuid/arbitrary",
     "surrealdb-types/arbitrary",
     "surrealdb-query/arbitrary",
+    "surrealdb-schema/arbitrary",
 ]
 allocation-tracking = []
 trace-doc-ops = []
@@ -94,6 +95,7 @@ storekey.workspace = true
 surrealdb-types = { workspace = true }
 surrealdb-values = { workspace = true }
 surrealdb-query = { workspace = true }
+surrealdb-schema = { workspace = true }
 vart.workspace = true
 
 # External KV stores

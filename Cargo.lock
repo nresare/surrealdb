@@ -7028,6 +7028,7 @@ dependencies = [
  "surrealdb-protocol",
  "surrealdb-query",
  "surrealdb-rocksdb",
+ "surrealdb-schema",
  "surrealdb-support",
  "surrealdb-tikv-client",
  "surrealdb-types",
@@ -7152,6 +7153,13 @@ dependencies = [
 [[package]]
 name = "surrealdb-schema"
 version = "3.1.0-alpha"
+dependencies = [
+ "arbitrary",
+ "revision",
+ "serde",
+ "storekey",
+ "surrealdb-types",
+]
 
 [[package]]
 name = "surrealdb-server"
