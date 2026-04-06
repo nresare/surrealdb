@@ -105,6 +105,7 @@ surrealdb-storage-indxdb = { workspace = true }
 surrealdb-index = { workspace = true }
 surrealdb-query-runtime = { workspace = true }
 surrealdb-database = { workspace = true }
+surrealdb-core-protocol = { workspace = true }
 vart.workspace = true
 
 # External KV stores

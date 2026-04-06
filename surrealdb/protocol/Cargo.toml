@@ -15,9 +15,10 @@ license-file.workspace = true
 default = []
 
 [dependencies]
+http.workspace = true
 
 [lints]
 workspace = true
 
 [lib]
-name = "surrealdb_protocol"
+name = "surrealdb_core_protocol"

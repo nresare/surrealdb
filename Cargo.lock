@@ -7025,6 +7025,7 @@ dependencies = [
  "storekey",
  "strsim",
  "subtle",
+ "surrealdb-core-protocol",
  "surrealdb-database",
  "surrealdb-index",
  "surrealdb-protocol",
@@ -7072,6 +7073,9 @@ dependencies = [
 [[package]]
 name = "surrealdb-core-protocol"
 version = "3.1.0-alpha"
+dependencies = [
+ "http 1.4.0",
+]
 
 [[package]]
 name = "surrealdb-database"
