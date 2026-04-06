@@ -6,6 +6,20 @@ members = [
     # SurrealDB crates
     "surrealdb",
     "surrealdb/core",
+    "surrealdb/support",
+    "surrealdb/values",
+    "surrealdb/query",
+    "surrealdb/schema",
+    "surrealdb/storage",
+    "surrealdb/storage-mem",
+    "surrealdb/storage-rocksdb",
+    "surrealdb/storage-surrealkv",
+    "surrealdb/storage-tikv",
+    "surrealdb/storage-indxdb",
+    "surrealdb/index",
+    "surrealdb/query-runtime",
+    "surrealdb/database",
+    "surrealdb/protocol",
     "surrealdb/server",
     "surrealdb/types",
     "surrealdb/types/derive",
@@ -43,6 +57,20 @@ categories = ["database-implementations", "data-structures", "embedded"]
 # SurrealDB crates
 surrealdb = { version = "3.1.0-alpha", path = "surrealdb" }
 surrealdb-core = { version = "3.1.0-alpha", path = "surrealdb/core", default-features = false }
+surrealdb-support = { version = "3.1.0-alpha", path = "surrealdb/support" }
+surrealdb-values = { version = "3.1.0-alpha", path = "surrealdb/values" }
+surrealdb-query = { version = "3.1.0-alpha", path = "surrealdb/query" }
+surrealdb-schema = { version = "3.1.0-alpha", path = "surrealdb/schema" }
+surrealdb-storage = { version = "3.1.0-alpha", path = "surrealdb/storage" }
+surrealdb-storage-mem = { version = "3.1.0-alpha", path = "surrealdb/storage-mem" }
+surrealdb-storage-rocksdb = { version = "3.1.0-alpha", path = "surrealdb/storage-rocksdb" }
+surrealdb-storage-surrealkv = { version = "3.1.0-alpha", path = "surrealdb/storage-surrealkv" }
+surrealdb-storage-tikv = { version = "3.1.0-alpha", path = "surrealdb/storage-tikv" }
+surrealdb-storage-indxdb = { version = "3.1.0-alpha", path = "surrealdb/storage-indxdb" }
+surrealdb-index = { version = "3.1.0-alpha", path = "surrealdb/index" }
+surrealdb-query-runtime = { version = "3.1.0-alpha", path = "surrealdb/query-runtime" }
+surrealdb-database = { version = "3.1.0-alpha", path = "surrealdb/database" }
+surrealdb-core-protocol = { version = "3.1.0-alpha", path = "surrealdb/protocol" }
 surrealdb-server = { version = "3.1.0-alpha", path = "surrealdb/server", default-features = false }
 surrealdb-types = { version = "3.1.0-alpha", path = "surrealdb/types" }
 surrealdb-types-derive = { version = "3.1.0-alpha", path = "surrealdb/types/derive" }

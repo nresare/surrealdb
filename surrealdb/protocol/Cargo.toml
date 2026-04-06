@@ -1,0 +1,23 @@
+[package]
+name = "surrealdb-core-protocol"
+publish = false
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+description = "Workspace skeleton crate for the future protocol layer"
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+license-file.workspace = true
+
+[features]
+default = []
+
+[dependencies]
+
+[lints]
+workspace = true
+
+[lib]
+name = "surrealdb_protocol"

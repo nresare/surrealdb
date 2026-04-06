@@ -7057,6 +7057,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "surrealdb-core-protocol"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-database"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-index"
+version = "3.1.0-alpha"
+
+[[package]]
 name = "surrealdb-librocksdb-sys"
 version = "0.17.3+10.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7110,6 +7122,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "surrealdb-query"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-query-runtime"
+version = "3.1.0-alpha"
+
+[[package]]
 name = "surrealdb-rocksdb"
 version = "0.24.0-surreal.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7118,6 +7138,10 @@ dependencies = [
  "libc",
  "surrealdb-librocksdb-sys",
 ]
+
+[[package]]
+name = "surrealdb-schema"
+version = "3.1.0-alpha"
 
 [[package]]
 name = "surrealdb-server"
@@ -7192,6 +7216,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "surrealdb-storage"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-storage-indxdb"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-storage-mem"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-storage-rocksdb"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-storage-surrealkv"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-storage-tikv"
+version = "3.1.0-alpha"
+
+[[package]]
+name = "surrealdb-support"
+version = "3.1.0-alpha"
+
+[[package]]
 name = "surrealdb-tikv-client"
 version = "0.3.0-surreal.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7258,6 +7310,10 @@ dependencies = [
  "quote",
  "syn 2.0.114",
 ]
+
+[[package]]
+name = "surrealdb-values"
+version = "3.1.0-alpha"
 
 [[package]]
 name = "surrealism"
