@@ -7026,6 +7026,7 @@ dependencies = [
  "strsim",
  "subtle",
  "surrealdb-protocol",
+ "surrealdb-query",
  "surrealdb-rocksdb",
  "surrealdb-support",
  "surrealdb-tikv-client",
@@ -7126,6 +7127,13 @@ dependencies = [
 [[package]]
 name = "surrealdb-query"
 version = "3.1.0-alpha"
+dependencies = [
+ "arbitrary",
+ "phf 0.13.1",
+ "surrealdb-support",
+ "surrealdb-types",
+ "unicase",
+]
 
 [[package]]
 name = "surrealdb-query-runtime"

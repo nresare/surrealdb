@@ -36,7 +36,7 @@ const TARGET: &str = "surrealdb::core::syn";
 /// Takes a string and returns if it could be a reserved keyword in certain
 /// contexts.
 pub fn could_be_reserved_keyword(s: &str) -> bool {
-	lexer::keywords::could_be_reserved(s)
+	surrealdb_query::syn::could_be_reserved_keyword(s)
 }
 
 pub fn parse_with<F, R>(input: &[u8], f: F) -> Result<R>

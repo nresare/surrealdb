@@ -13,8 +13,14 @@ license-file.workspace = true
 
 [features]
 default = []
+arbitrary = ["dep:arbitrary"]
 
 [dependencies]
+surrealdb-support = { workspace = true }
+surrealdb-types = { workspace = true }
+phf = { workspace = true, features = ["macros", "unicase"] }
+unicase.workspace = true
+arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 [lints]
 workspace = true
