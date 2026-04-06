@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 use std::fmt;
 use std::fmt::Debug;
 use std::ops::Range;
@@ -9,29 +11,7 @@ use super::batch::Batch;
 use super::scanner::{Direction, Scanner};
 use super::{IntoBytes, Key, Result, Val};
 use crate::kvs::timestamp::{BoxTimeStamp, BoxTimeStampImpl};
-
-/// Specifies whether the transaction is read-only or writeable.
-#[derive(Copy, Clone, Eq, PartialEq)]
-pub enum TransactionType {
-	Read,
-	Write,
-}
-
-/// Specifies whether the transaction is optimistic or pessimistic.
-#[derive(Copy, Clone)]
-pub enum LockType {
-	Pessimistic,
-	Optimistic,
-}
-
-impl From<bool> for LockType {
-	fn from(value: bool) -> Self {
-		match value {
-			true => LockType::Pessimistic,
-			false => LockType::Optimistic,
-		}
-	}
-}
+pub use surrealdb_storage::{LockType, TransactionType};
 
 /// A set of undoable updates and requests against a dataset.
 pub struct Transactor {

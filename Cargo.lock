@@ -7029,6 +7029,7 @@ dependencies = [
  "surrealdb-query",
  "surrealdb-rocksdb",
  "surrealdb-schema",
+ "surrealdb-storage",
  "surrealdb-support",
  "surrealdb-tikv-client",
  "surrealdb-types",
@@ -7236,6 +7237,9 @@ dependencies = [
 [[package]]
 name = "surrealdb-storage"
 version = "3.1.0-alpha"
+dependencies = [
+ "bytes",
+]
 
 [[package]]
 name = "surrealdb-storage-indxdb"

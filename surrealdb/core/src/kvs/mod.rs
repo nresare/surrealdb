@@ -54,22 +54,13 @@ pub use ds::{
 	Datastore, DatastoreFlavor, Metric, Metrics, TransactionBuilder, TransactionBuilderFactory,
 };
 pub use err::{Error, Result};
-pub use into::IntoBytes;
 pub(crate) use key::{KVKey, KVValue, impl_kv_key_storekey, impl_kv_value_revisioned};
 pub use scanner::{Direction, Scanner};
+pub use surrealdb_storage::{IntoBytes, Key, LockType, TransactionType, Val, Version};
 pub use timestamp::{
 	BoxTimeStamp, BoxTimeStampImpl, HlcTimeStamp, HlcTimeStampImpl, IncTimeStampImpl,
 	MAX_TIMESTAMP_BYTES, TimeStamp, TimeStampImpl,
 };
-pub use tr::{LockType, TransactionType, Transactor};
+pub use tr::Transactor;
 pub(crate) use tx::CachePolicy;
 pub use tx::Transaction;
-
-/// The key part of a key-value pair. An alias for [`Vec<u8>`].
-pub type Key = Vec<u8>;
-
-/// The value part of a key-value pair. An alias for [`Vec<u8>`].
-pub type Val = Vec<u8>;
-
-/// The Version part of a key-value pair. An alias for [`u64`].
-pub type Version = u64;

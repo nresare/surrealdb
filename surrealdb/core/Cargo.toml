@@ -96,6 +96,7 @@ surrealdb-types = { workspace = true }
 surrealdb-values = { workspace = true }
 surrealdb-query = { workspace = true }
 surrealdb-schema = { workspace = true }
+surrealdb-storage = { workspace = true }
 vart.workspace = true
 
 # External KV stores
