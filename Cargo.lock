@@ -7028,6 +7028,7 @@ dependencies = [
  "surrealdb-index",
  "surrealdb-protocol",
  "surrealdb-query",
+ "surrealdb-query-runtime",
  "surrealdb-rocksdb",
  "surrealdb-schema",
  "surrealdb-storage",
@@ -7146,6 +7147,10 @@ dependencies = [
 [[package]]
 name = "surrealdb-query-runtime"
 version = "3.1.0-alpha"
+dependencies = [
+ "futures",
+ "pin-project-lite",
+]
 
 [[package]]
 name = "surrealdb-rocksdb"

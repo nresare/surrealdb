@@ -15,6 +15,8 @@ license-file.workspace = true
 default = []
 
 [dependencies]
+futures.workspace = true
+pin-project-lite.workspace = true
 
 [lints]
 workspace = true

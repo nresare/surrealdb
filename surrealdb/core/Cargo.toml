@@ -103,6 +103,7 @@ surrealdb-storage-surrealkv = { workspace = true }
 surrealdb-storage-tikv = { workspace = true }
 surrealdb-storage-indxdb = { workspace = true }
 surrealdb-index = { workspace = true }
+surrealdb-query-runtime = { workspace = true }
 vart.workspace = true
 
 # External KV stores
