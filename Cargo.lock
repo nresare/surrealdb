@@ -6910,6 +6910,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serial_test",
+ "surrealdb-client-core",
  "surrealdb-core",
  "surrealdb-types",
  "surrealdb-types-derive",
@@ -6936,6 +6937,14 @@ dependencies = [
 [[package]]
 name = "surrealdb-client-core"
 version = "3.0.5"
+dependencies = [
+ "humantime",
+ "revision",
+ "serde",
+ "surrealdb-types",
+ "tracing",
+ "web-time",
+]
 
 [[package]]
 name = "surrealdb-core"
