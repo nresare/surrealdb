@@ -6943,6 +6943,7 @@ dependencies = [
  "serde",
  "surrealdb-types",
  "tracing",
+ "uuid",
  "web-time",
 ]
 
