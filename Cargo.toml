@@ -6,6 +6,7 @@ members = [
     # SurrealDB crates
     "surrealdb",
     "surrealdb/core",
+    "surrealdb/client-core",
     "surrealdb/server",
     "surrealdb/types",
     "surrealdb/types/derive",
@@ -46,6 +47,7 @@ surrealdb-core = { version = "3.0.5", path = "surrealdb/core", default-features 
 surrealdb-server = { version = "3.0.5", path = "surrealdb/server", default-features = false }
 surrealdb-types = { version = "3.0.5", path = "surrealdb/types" }
 surrealdb-types-derive = { version = "3.0.5", path = "surrealdb/types/derive" }
+surrealdb-client-core = { version = "3.0.5", path = "surrealdb/client-core" }
 # SurrealML crates
 surrealml-core = { version = "0.1", path = "surrealml/core" }
 # Surrealism crates
