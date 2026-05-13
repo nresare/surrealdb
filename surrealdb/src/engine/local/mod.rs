@@ -591,19 +591,7 @@ async fn router(
 					.await
 					.map_err(|e| TypesError::not_allowed(e.to_string(), None))?
 			};
-			let token = match signup_data {
-				iam::Token::Access(token) => Token {
-					access: AccessToken(SecureToken(token)),
-					refresh: None,
-				},
-				iam::Token::WithRefresh {
-					access: token,
-					refresh,
-				} => Token {
-					access: AccessToken(SecureToken(token)),
-					refresh: Some(RefreshToken(SecureToken(refresh))),
-				},
-			};
+			let token = sdk_token_from_iam(signup_data);
 			let result = query_result.finish_with_result(Ok(token.into_value()));
 			Ok(vec![result])
 		}
@@ -616,19 +604,7 @@ async fn router(
 					.await
 					.map_err(|e| TypesError::not_allowed(e.to_string(), None))?
 			};
-			let token = match signin_data {
-				iam::Token::Access(token) => Token {
-					access: AccessToken(SecureToken(token)),
-					refresh: None,
-				},
-				iam::Token::WithRefresh {
-					access,
-					refresh,
-				} => Token {
-					access: AccessToken(SecureToken(access)),
-					refresh: Some(RefreshToken(SecureToken(refresh))),
-				},
-			};
+			let token = sdk_token_from_iam(signin_data);
 			let result = query_result.finish_with_result(Ok(token.into_value()));
 			Ok(vec![result])
 		}
@@ -636,8 +612,9 @@ async fn router(
 			token,
 		} => {
 			let query_result = QueryResultBuilder::started_now();
+			let iam_token = iam_token_from_sdk(&token);
 			// Extract the access token and check if this token supports refresh
-			let (access, with_refresh) = match &token {
+			let (access, with_refresh) = match &iam_token {
 				iam::Token::Access(access) => (access, false),
 				iam::Token::WithRefresh {
 					access,
@@ -654,15 +631,16 @@ async fn router(
 						// If the access token is expired and we have a refresh token,
 						// automatically attempt to refresh and return new tokens.
 						if with_refresh && surrealdb_core::iam::is_expired_token_error(&error) {
-							let result =
-								match token.refresh(kvs, &mut *state.session.write().await).await {
-									Ok(token) => {
-										query_result.finish_with_result(Ok(token.into_value()))
-									}
-									Err(error) => query_result.finish_with_result(Err(
-										TypesError::internal(error.to_string()),
-									)),
-								};
+							let result = match iam_token
+								.refresh(kvs, &mut *state.session.write().await)
+								.await
+							{
+								Ok(token) => query_result
+									.finish_with_result(Ok(sdk_token_from_iam(token).into_value())),
+								Err(error) => query_result.finish_with_result(Err(
+									TypesError::internal(error.to_string()),
+								)),
+							};
 							return Ok(vec![result]);
 						}
 						// If authentication failed and automatic refresh isn't applicable,
@@ -680,8 +658,13 @@ async fn router(
 			// Refresh command: Exchange a refresh token for new access and refresh tokens
 			let query_result = QueryResultBuilder::started_now();
 			let result = {
-				match token.refresh(kvs, &mut *state.session.write().await).await {
-					Ok(token) => query_result.finish_with_result(Ok(token.into_value())),
+				match iam_token_from_sdk(&token)
+					.refresh(kvs, &mut *state.session.write().await)
+					.await
+				{
+					Ok(token) => {
+						query_result.finish_with_result(Ok(sdk_token_from_iam(token).into_value()))
+					}
 					Err(error) => query_result
 						.finish_with_result(Err(TypesError::internal(error.to_string()))),
 				}
@@ -718,7 +701,7 @@ async fn router(
 		} => {
 			// Revoke command: Explicitly invalidate a refresh token to prevent future use
 			let query_result = QueryResultBuilder::started_now();
-			let result = match token.revoke_refresh_token(kvs).await {
+			let result = match iam_token_from_sdk(&token).revoke_refresh_token(kvs).await {
 				Ok(_) => query_result.finish_with_result(Ok(Value::None)),
 				Err(error) => {
 					query_result.finish_with_result(Err(TypesError::internal(error.to_string())))
@@ -1170,5 +1153,31 @@ async fn router(
 			let query_result = QueryResultBuilder::started_now();
 			Ok(vec![query_result.finish()])
 		}
+	}
+}
+
+fn sdk_token_from_iam(token: iam::Token) -> Token {
+	match token {
+		iam::Token::Access(token) => Token {
+			access: AccessToken(SecureToken(token)),
+			refresh: None,
+		},
+		iam::Token::WithRefresh {
+			access,
+			refresh,
+		} => Token {
+			access: AccessToken(SecureToken(access)),
+			refresh: Some(RefreshToken(SecureToken(refresh))),
+		},
+	}
+}
+
+fn iam_token_from_sdk(token: &Token) -> iam::Token {
+	match &token.refresh {
+		Some(refresh) => iam::Token::WithRefresh {
+			access: token.access.as_insecure_token().to_owned(),
+			refresh: refresh.as_insecure_token().to_owned(),
+		},
+		None => iam::Token::Access(token.access.as_insecure_token().to_owned()),
 	}
 }
