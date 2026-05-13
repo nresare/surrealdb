@@ -726,7 +726,7 @@ impl Surreal<Client> {
 mod tests {
 	use std::sync::Arc;
 
-	use surrealdb_core::rpc::DbResult;
+	use surrealdb_client_core::rpc::DbResult;
 	use surrealdb_types::Error as TypesError;
 	use tokio::sync::RwLock;
 	use uuid::Uuid;

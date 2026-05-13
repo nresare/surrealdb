@@ -898,7 +898,7 @@ pub async fn select_records_fetch(new_db: impl CreateDb) {
 
 	let check_fetch = |mut response: IndexedResults, expected: &str| {
 		let val: Value = response.take(0).unwrap();
-		let exp = surrealdb::parse::value(expected).unwrap();
+		let exp = syn::value(expected).unwrap();
 		assert_eq!(val, exp);
 	};
 
@@ -1545,7 +1545,7 @@ pub async fn changefeed(new_db: impl CreateDb) {
 	let changes = a.get("changes").unwrap().clone();
 	assert_eq!(
 		changes,
-		surrealdb::parse::value(
+		syn::value(
 			"[
         {
             define_table: {
@@ -1583,7 +1583,7 @@ pub async fn changefeed(new_db: impl CreateDb) {
 	let changes = a.get("changes").unwrap().to_owned();
 	assert_eq!(
 		changes,
-		surrealdb::parse::value(
+		syn::value(
 			"[
                  {
                       update: {
@@ -1607,7 +1607,7 @@ pub async fn changefeed(new_db: impl CreateDb) {
 	let changes = a.get("changes").unwrap().to_owned();
 	assert_eq!(
 		changes,
-		surrealdb::parse::value(
+		syn::value(
 			"[
                     {
                          update: {
@@ -1631,7 +1631,7 @@ pub async fn changefeed(new_db: impl CreateDb) {
 	let changes = a.get("changes").unwrap().to_owned();
 	assert_eq!(
 		changes,
-		surrealdb::parse::value(
+		syn::value(
 			"[
                     {
                         update: {
@@ -1655,7 +1655,7 @@ pub async fn changefeed(new_db: impl CreateDb) {
 	let changes = a.get("changes").unwrap().to_owned();
 	assert_eq!(
 		changes,
-		surrealdb::parse::value(
+		syn::value(
 			"[
         {
             update: {

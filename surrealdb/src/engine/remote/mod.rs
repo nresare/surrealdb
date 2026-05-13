@@ -408,8 +408,8 @@ mod test {
 
 		assert_converts(
 			request,
-			|i| surrealdb_core::rpc::format::flatbuffers::encode(i).unwrap(),
-			|b| surrealdb_core::rpc::format::flatbuffers::decode(&b).unwrap(),
+			|i| surrealdb_types::encode(i).unwrap(),
+			|b| surrealdb_types::decode(&b).unwrap(),
 		);
 	}
 }

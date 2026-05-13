@@ -349,7 +349,7 @@ mod tests {
 	use flate2::Compression;
 	use flate2::write::GzEncoder;
 	use rand::{Rng, thread_rng};
-	use surrealdb_core::rpc;
+	use surrealdb_core::rpc::format::cbor;
 	use web_time::SystemTime;
 
 	use crate::types::{Array, Value};
@@ -385,8 +385,7 @@ mod tests {
 		const FLATBUFFERS: &str = "Flatbuffers Vec<Value>";
 		const FLATBUFFERS_COMPRESSED: &str = "Flatbuffers Compressed Vec<Value>";
 		{
-			let (duration, payload) =
-				timed(&|| surrealdb_core::rpc::format::flatbuffers::encode(&vector).unwrap());
+			let (duration, payload) = timed(&|| surrealdb_types::encode(&vector).unwrap());
 			ref_payload = payload.len() as f32;
 			results.push((payload.len(), FLATBUFFERS, duration, 1.0));
 
@@ -400,7 +399,7 @@ mod tests {
 		const CBOR_COMPRESSED: &str = "Compressed CBor Vec<Value>";
 		{
 			let (duration, payload) = timed(&|| {
-				let cbor = rpc::format::cbor::encode(vector.clone()).unwrap();
+				let cbor = cbor::encode(vector.clone()).unwrap();
 				let mut res = Vec::new();
 				ciborium::into_writer(&cbor, &mut res).unwrap();
 				res
